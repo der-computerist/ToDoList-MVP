@@ -25,6 +25,8 @@
 		CD495AA22735891A0056FCB0 /* ActivityRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD495AA12735891A0056FCB0 /* ActivityRepository.swift */; };
 		CD495AAF273D28EB0056FCB0 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD495AAE273D28EB0056FCB0 /* Activity.swift */; };
 		CD68833E27A56E98007B3DC9 /* UIViewController+ErrorPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD68833D27A56E98007B3DC9 /* UIViewController+ErrorPresentation.swift */; };
+		CD758E8A2EA13C6F00430AD4 /* LandingViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD758E892EA13C6F00430AD4 /* LandingViewPresenter.swift */; };
+		CD758E8C2EA13ECC00430AD4 /* LandingViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD758E8B2EA13ECC00430AD4 /* LandingViewProtocol.swift */; };
 		CD7EE442280104FE00490DDD /* ActivitiesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD7EE440280104FE00490DDD /* ActivitiesViewController.swift */; };
 		CD9D759A27B0C0C900533BBE /* UIAlertController+BugFix.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD9D759927B0C0C900533BBE /* UIAlertController+BugFix.swift */; };
 		CDB7273F291D261A00B86A72 /* LandingViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB7272C291AF4F400B86A72 /* LandingViewControllerTests.swift */; };
@@ -85,6 +87,8 @@
 		CD495AA12735891A0056FCB0 /* ActivityRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityRepository.swift; sourceTree = "<group>"; };
 		CD495AAE273D28EB0056FCB0 /* Activity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
 		CD68833D27A56E98007B3DC9 /* UIViewController+ErrorPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+ErrorPresentation.swift"; sourceTree = "<group>"; };
+		CD758E892EA13C6F00430AD4 /* LandingViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingViewPresenter.swift; sourceTree = "<group>"; };
+		CD758E8B2EA13ECC00430AD4 /* LandingViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingViewProtocol.swift; sourceTree = "<group>"; };
 		CD7EE440280104FE00490DDD /* ActivitiesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivitiesViewController.swift; sourceTree = "<group>"; };
 		CD9D759927B0C0C900533BBE /* UIAlertController+BugFix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+BugFix.swift"; sourceTree = "<group>"; };
 		CDB7272C291AF4F400B86A72 /* LandingViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingViewControllerTests.swift; sourceTree = "<group>"; };
@@ -204,6 +208,7 @@
 				CDDD37742819F2FC00DE3303 /* AppDelegate */,
 				CDDD37722819F2CA00DE3303 /* Controllers */,
 				CD495A93273585280056FCB0 /* Models */,
+				CD758E882EA13ACB00430AD4 /* Presenters */,
 				CDDD37752819F30B00DE3303 /* Resources */,
 				CD495A7427356E9A0056FCB0 /* Reusable */,
 				CDDD37732819F2D000DE3303 /* Views */,
@@ -319,6 +324,14 @@
 			path = Implementations;
 			sourceTree = "<group>";
 		};
+		CD758E882EA13ACB00430AD4 /* Presenters */ = {
+			isa = PBXGroup;
+			children = (
+				CD758E892EA13C6F00430AD4 /* LandingViewPresenter.swift */,
+			);
+			path = Presenters;
+			sourceTree = "<group>";
+		};
 		CDB7274B291D266500B86A72 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -340,7 +353,6 @@
 			children = (
 				CD3A2FE129DE62F900F750A7 /* Strategies */,
 				CDDE238127E3F14B00CA383D /* MainViewController.swift */,
-				CDE16EEA279F56F700F3DFAE /* LandingViewController.swift */,
 				CD7EE440280104FE00490DDD /* ActivitiesViewController.swift */,
 				CD495A8E273581A90056FCB0 /* ActivityDetailViewController.swift */,
 			);
@@ -350,8 +362,10 @@
 		CDDD37732819F2D000DE3303 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				CDDD377C2819F4D300DE3303 /* LandingRootView.swift */,
 				CDDD3785281B00DF00DE3303 /* ActivityDetailRootView.swift */,
+				CDDD377C2819F4D300DE3303 /* LandingRootView.swift */,
+				CDE16EEA279F56F700F3DFAE /* LandingViewController.swift */,
+				CD758E8B2EA13ECC00430AD4 /* LandingViewProtocol.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -540,8 +554,10 @@
 				CD495A85273575C30056FCB0 /* NiblessNavigationController.swift in Sources */,
 				CDCB6F1F29359121000CDEBD /* FakeActivityDataStore.swift in Sources */,
 				CDF23AAB2785C81100730912 /* FileActivityDataStore.swift in Sources */,
+				CD758E8A2EA13C6F00430AD4 /* LandingViewPresenter.swift in Sources */,
 				CD3A2FEB29DE634200F750A7 /* NewActivityStrategy.swift in Sources */,
 				CD4948A6274FC75F00D05F5F /* Color.swift in Sources */,
+				CD758E8C2EA13ECC00430AD4 /* LandingViewProtocol.swift in Sources */,
 				CD495A39273568530056FCB0 /* AppDelegate.swift in Sources */,
 				CD495A9A273588190056FCB0 /* ActivityDataStore.swift in Sources */,
 				CD495AAF273D28EB0056FCB0 /* Activity.swift in Sources */,

@@ -15,11 +15,11 @@ public protocol LandingViewControllerDelegate: AnyObject {
 public final class LandingViewController: NiblessViewController {
     
     // MARK: - Properties
+    private var presenter: LandingViewPresenter?
     public weak var delegate: LandingViewControllerDelegate?
     
     private let activitiesViewController: ActivitiesViewController
     private let activityRepository: NSObject & ActivityRepository
-    private var observation: NSKeyValueObservation?
 
     private var rootView: LandingRootView! {
         guard isViewLoaded else { return nil }
@@ -58,8 +58,9 @@ public final class LandingViewController: NiblessViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        
         add(childViewController: activitiesViewController, over: rootView.activitiesContainerView)
-        observation = observeActivitiesCount(on: activityRepository)
+        presenter = LandingViewPresenter(activityRepository: activityRepository, view: self)
     }
     
     // MARK: Actions
@@ -73,21 +74,18 @@ public final class LandingViewController: NiblessViewController {
         super.setEditing(editing, animated: animated)
         activitiesViewController.setEditing(editing, animated: animated)
     }
+}
+
+// MARK: - LandingViewProtocol
+extension LandingViewController: LandingViewProtocol {
     
-    // MARK: Private
-    private func observeActivitiesCount<T: NSObject & ActivityRepository>(
-        on subject: T
-    ) -> NSKeyValueObservation {
-        
-        subject.observe(\.activitiesCount, options: [.initial, .new]) { [weak self] subject, _ in
-            DispatchQueue.main.async {
-                self?.updateActivitiesCountLabel(with: subject.activitiesCount)
-            }
+    var activitiesCountLabel: String {
+        get {
+            return rootView.activitiesCountLabel.text ?? ""
         }
-    }
-    
-    private func updateActivitiesCountLabel(with newActivitiesCount: Int) {
-        rootView.activitiesCountLabel.text = "Total: \(newActivitiesCount)"
+        set {
+            rootView.activitiesCountLabel.text = newValue
+        }
     }
 }
 
