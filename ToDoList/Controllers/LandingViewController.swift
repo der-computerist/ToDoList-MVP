@@ -1,0 +1,125 @@
+//
+//  LandingViewController.swift
+//  ToDoList
+//
+//  Created by Enrique Aliaga on 1/24/22.
+//
+
+import UIKit
+
+public protocol LandingViewControllerDelegate: AnyObject {
+    
+    func landingViewControllerAddButtonWasTapped(_ viewController: LandingViewController)
+}
+
+public final class LandingViewController: NiblessViewController {
+    
+    // MARK: - Properties
+    public weak var delegate: LandingViewControllerDelegate?
+    
+    private let activitiesViewController: ActivitiesViewController
+    private let activityRepository: NSObject & ActivityRepository
+    private var observation: NSKeyValueObservation?
+
+    private var rootView: LandingRootView! {
+        guard isViewLoaded else { return nil }
+        return (view as! LandingRootView)
+    }
+    
+    private lazy var addButtonItem: UIBarButtonItem = {
+        let buttonItem = UIBarButtonItem(
+            barButtonSystemItem: .add,
+            target: self,
+            action: #selector(handleAddButtonPressed(sender:))
+        )
+        return buttonItem
+    }()
+    
+    // MARK: - Methods
+    public init(
+        activitiesViewController: ActivitiesViewController,
+        activityRepository: NSObject & ActivityRepository
+    ) {
+        self.activitiesViewController = activitiesViewController
+        self.activityRepository = activityRepository
+        
+        super.init()
+        
+        restorationIdentifier = Restoration.viewControllerIdentifier
+        navigationItem.title = Constants.title
+        navigationItem.leftBarButtonItem = editButtonItem
+        navigationItem.rightBarButtonItem = addButtonItem
+    }
+    
+    // MARK: View lifecycle
+    public override func loadView() {
+        view = LandingRootView()
+    }
+    
+    public override func viewDidLoad() {
+        super.viewDidLoad()
+        add(childViewController: activitiesViewController, over: rootView.activitiesContainerView)
+        observation = observeActivitiesCount(on: activityRepository)
+    }
+    
+    // MARK: Actions
+    @objc
+    func handleAddButtonPressed(sender: UIBarButtonItem) {
+        delegate?.landingViewControllerAddButtonWasTapped(self)
+    }
+    
+    @objc
+    public override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        activitiesViewController.setEditing(editing, animated: animated)
+    }
+    
+    // MARK: Private
+    private func observeActivitiesCount<T: NSObject & ActivityRepository>(
+        on subject: T
+    ) -> NSKeyValueObservation {
+        
+        subject.observe(\.activitiesCount, options: [.initial, .new]) { [weak self] subject, _ in
+            DispatchQueue.main.async {
+                self?.updateActivitiesCountLabel(with: subject.activitiesCount)
+            }
+        }
+    }
+    
+    private func updateActivitiesCountLabel(with newActivitiesCount: Int) {
+        rootView.activitiesCountLabel.text = "Total: \(newActivitiesCount)"
+    }
+}
+
+// MARK: - State Restoration
+extension LandingViewController {
+    
+    public override func encodeRestorableState(with coder: NSCoder) {
+        super.encodeRestorableState(with: coder)
+        
+        coder.encode(activitiesViewController, forKey: Restoration.Key.activitiesViewController)
+        coder.encode(isEditing, forKey: Restoration.Key.landingViewControllerIsEditing)
+    }
+    
+    public override func decodeRestorableState(with coder: NSCoder) {
+        super.decodeRestorableState(with: coder)
+        isEditing = coder.decodeBool(forKey: Restoration.Key.landingViewControllerIsEditing)
+    }
+}
+
+// MARK: - Constants
+extension LandingViewController {
+    
+    enum Constants {
+        static let title = "To Do List"
+    }
+    
+    enum Restoration {
+        static let viewControllerIdentifier = String(describing: LandingViewController.self)
+        
+        enum Key {
+            static let activitiesViewController = "activitiesViewController"
+            static let landingViewControllerIsEditing = "landingViewControllerIsEditing"
+        }
+    }
+}
