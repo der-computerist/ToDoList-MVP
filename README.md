@@ -1,9 +1,9 @@
-# To Do List (MVC)
-A sample application of the Cocoa MVC architecture.
+# To Do List (MVP)
+A sample application of the MVP architecture.
 
 This is a solution to a programming exercise that consists on creating a simple "To Do List" application.
 It applies the following technologies and patterns:
-* Model View Controller (MVC) architecture
+* Model-View-Presenter (MVP) architecture
 * Dependency Injection / On-Demand approach
 * UIKit
 * XCTest for integration testing
