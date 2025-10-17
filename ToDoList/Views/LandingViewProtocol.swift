@@ -11,5 +11,6 @@ protocol LandingViewProtocol: AnyObject {
     
     var activitiesCountLabel: String { get set }
     
+    func setEditingMode(_ editing: Bool)
     func didTapAddButton()
 }

@@ -20,6 +20,7 @@ public final class LandingViewController: NiblessViewController {
     
     private let activitiesViewController: ActivitiesViewController
     private let activityRepository: NSObject & ActivityRepository
+    private var shouldAnimateEditingTransition = true
 
     private var rootView: LandingRootView! {
         guard isViewLoaded else { return nil }
@@ -72,7 +73,9 @@ public final class LandingViewController: NiblessViewController {
     @objc
     public override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
-        activitiesViewController.setEditing(editing, animated: animated)
+        
+        shouldAnimateEditingTransition = animated
+        presenter?.didChangeEditingMode(to: editing)
     }
 }
 
@@ -88,6 +91,10 @@ extension LandingViewController: LandingViewProtocol {
         }
     }
     
+    func setEditingMode(_ editing: Bool) {
+        activitiesViewController.setEditing(editing, animated: shouldAnimateEditingTransition)
+    }
+   
     func didTapAddButton() {
         delegate?.landingViewControllerAddButtonWasTapped(self)
     }

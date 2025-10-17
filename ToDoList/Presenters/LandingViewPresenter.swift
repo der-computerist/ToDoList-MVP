@@ -23,6 +23,10 @@ class LandingViewPresenter {
     }
     
     // MARK: - Methods
+    func didChangeEditingMode(to editing: Bool) {
+        view?.setEditingMode(editing)
+    }
+    
     func didTapAddButton() {
         view?.didTapAddButton()
     }
