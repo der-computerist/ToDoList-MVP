@@ -66,7 +66,7 @@ public final class LandingViewController: NiblessViewController {
     // MARK: Actions
     @objc
     func handleAddButtonPressed(sender: UIBarButtonItem) {
-        delegate?.landingViewControllerAddButtonWasTapped(self)
+        presenter?.didTapAddButton()
     }
     
     @objc
@@ -86,6 +86,10 @@ extension LandingViewController: LandingViewProtocol {
         set {
             rootView.activitiesCountLabel.text = newValue
         }
+    }
+    
+    func didTapAddButton() {
+        delegate?.landingViewControllerAddButtonWasTapped(self)
     }
 }
 

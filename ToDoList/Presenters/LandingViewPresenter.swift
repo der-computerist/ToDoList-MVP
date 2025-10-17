@@ -23,6 +23,10 @@ class LandingViewPresenter {
     }
     
     // MARK: - Methods
+    func didTapAddButton() {
+        view?.didTapAddButton()
+    }
+    
     private func observeActivitiesCount<T: NSObject & ActivityRepository>(
         on subject: T
     ) -> NSKeyValueObservation {

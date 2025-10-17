@@ -10,4 +10,6 @@ import Foundation
 protocol LandingViewProtocol: AnyObject {
     
     var activitiesCountLabel: String { get set }
+    
+    func didTapAddButton()
 }
