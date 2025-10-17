@@ -118,7 +118,8 @@ extension ActivitiesViewController {
 extension ActivitiesViewController: UIDataSourceModelAssociation {
     
     public func modelIdentifierForElement(at idx: IndexPath, in view: UIView) -> String? {
-        activities[idx.row].id
+        guard !idx.isEmpty else { return nil }
+        return activities[idx.row].id
     }
     
     public func indexPathForElement(
