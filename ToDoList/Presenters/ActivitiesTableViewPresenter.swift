@@ -1,0 +1,63 @@
+//
+//  ActivitiesTableViewPresenter.swift
+//  ToDoList
+//
+//  Created by Enrique Aliaga on 10/20/25.
+//
+
+import Foundation
+
+class ActivitiesTableViewPresenter {
+    
+    // MARK: - Properties
+    private weak var tableView: ActivitiesTableViewProtocol?
+    private let activityRepository: NSObject & ActivityRepository
+    private var observation: NSKeyValueObservation!
+    
+    // MARK: - Initialization
+    init(
+        activityRepository: NSObject & ActivityRepository,
+        tableView: ActivitiesTableViewProtocol
+    ) {
+        self.activityRepository = activityRepository
+        self.tableView = tableView
+        
+        self.observation = observeActivities(on: activityRepository)
+    }
+    
+    // MARK: - Methods
+    private func observeActivities<T: NSObject & ActivityRepository>(
+        on subject: T
+    ) -> NSKeyValueObservation {
+        
+        subject.observe(\.activities, options: .new) { [weak self] _, change in
+            switch change.kind {
+            case .removal:
+                guard let oldIndex = change.indexes?.first else { return }
+                let indexPaths = [IndexPath(row: oldIndex, section: 0)]
+                DispatchQueue.main.async {
+                    self?.tableView?.deleteRows(at: indexPaths)
+                }
+            default:
+                DispatchQueue.main.async {
+                    self?.tableView?.reloadData()
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Testing
+#if TEST
+extension ActivitiesTableViewPresenter {
+    
+    /// Test hook to stop model observation.
+    ///
+    /// Intented to be used by tests that are only interested in validating that view actions
+    /// trigger the expected model changes. This is necessary because, if we don't invalidate
+    /// the model observation, some of these tests can become flaky.
+    func invalidateObservation() {
+        observation?.invalidate()
+    }
+}
+#endif

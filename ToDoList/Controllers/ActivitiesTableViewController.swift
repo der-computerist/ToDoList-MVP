@@ -18,12 +18,12 @@ public protocol ActivitiesTableViewControllerDelegate: AnyObject {
 public final class ActivitiesTableViewController: NiblessTableViewController {
     
     // MARK: - Properties
+    internal var presenter: ActivitiesTableViewPresenter?
     public weak var delegate: ActivitiesTableViewControllerDelegate?
     
     private let activityRepository: NSObject & ActivityRepository
     private var activities: [Activity] { activityRepository.activities }
     private let cellIdentifier = Constants.cellReuseIdentifier
-    private var observation: NSKeyValueObservation?
     
     // MARK: - Methods
     public init(activityRepository: NSObject & ActivityRepository) {
@@ -40,28 +40,11 @@ public final class ActivitiesTableViewController: NiblessTableViewController {
                                      // `UIDataSourceModelAssociation` methods to be called.
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.restorationIdentifier = Restoration.tableViewIdentifier
-        observation = observeActivities(on: activityRepository)
-    }
-    
-    // MARK: Private
-    private func observeActivities<T: NSObject & ActivityRepository>(
-        on subject: T
-    ) -> NSKeyValueObservation {
         
-        subject.observe(\.activities, options: .new) { [weak self] _, change in
-            switch change.kind {
-            case .removal:
-                guard let oldIndex = change.indexes?.first else { return }
-                let indexPaths = [IndexPath(row: oldIndex, section: 0)]
-                DispatchQueue.main.async {
-                    self?.tableView.deleteRows(at: indexPaths, with: .automatic)
-                }
-            default:
-                DispatchQueue.main.async {
-                    self?.tableView.reloadData()
-                }
-            }
-        }
+        presenter = ActivitiesTableViewPresenter(
+            activityRepository: activityRepository,
+            tableView: self
+        )
     }
 }
 
@@ -114,6 +97,18 @@ extension ActivitiesTableViewController {
     }
 }
 
+// MARK: - ActivitiesTableViewProtocol
+extension ActivitiesTableViewController: ActivitiesTableViewProtocol {
+    
+    func reloadData() {
+        tableView.reloadData()
+    }
+    
+    func deleteRows(at indexPaths: [IndexPath]) {
+        tableView.deleteRows(at: indexPaths, with: .automatic)
+    }
+}
+
 // MARK: - State Restoration
 extension ActivitiesTableViewController: UIDataSourceModelAssociation {
     
@@ -152,18 +147,3 @@ extension ActivitiesTableViewController {
         static let tableViewIdentifier = viewControllerIdentifier + "TableView"
     }
 }
-
-// MARK: - Testing
-#if TEST
-extension ActivitiesTableViewController {
-    
-    /// Test hook to stop model observation.
-    ///
-    /// Intented to be used by tests that are only interested in validating that view actions
-    /// trigger the expected model changes. This is necessary because, if we don't invalidate
-    /// the model observation, some of these tests can become flaky.
-    func invalidateObservation() {
-        observation?.invalidate()
-    }
-}
-#endif
