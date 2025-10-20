@@ -77,11 +77,11 @@ extension MainViewController: LandingViewControllerDelegate {
     }
 }
 
-// MARK: - ActivitiesViewControllerDelegate
-extension MainViewController: ActivitiesViewControllerDelegate {
+// MARK: - ActivitiesTableViewControllerDelegate
+extension MainViewController: ActivitiesTableViewControllerDelegate {
     
-    public func activitiesViewController(
-        _ _: ActivitiesViewController,
+    public func activitiesTableViewController(
+        _ _: ActivitiesTableViewController,
         didSelectActivity activity: Activity
     ) {
         presentActivityUpdateScreen(activity: activity)

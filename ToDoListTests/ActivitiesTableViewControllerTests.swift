@@ -1,5 +1,5 @@
 //
-//  ActivitiesViewControllerTests.swift
+//  ActivitiesTableViewControllerTests.swift
 //  ToDoListTests
 //
 //  Created by Enrique Aliaga on 11/8/22.
@@ -8,14 +8,14 @@
 import XCTest
 @testable import ToDoList
 
-final class ActivitiesViewControllerTests: XCTestCase {
+final class ActivitiesTableViewControllerTests: XCTestCase {
     
     // MARK: - Properties
     var activityRepository: (NSObject & ActivityRepository)!
     var appDelegate: AppDelegate!
     var mainViewController: MainViewController!
     var landingViewController: LandingViewController!
-    var activitiesViewController: ActivitiesViewController!
+    var activitiesTableViewController: ActivitiesTableViewController!
     var expectation: XCTestExpectation?
     let timeout = 2.0
 
@@ -27,7 +27,7 @@ final class ActivitiesViewControllerTests: XCTestCase {
         appDelegate = tuple.0
         mainViewController = tuple.1
         landingViewController = tuple.2
-        activitiesViewController = tuple.3
+        activitiesTableViewController = tuple.3
     }
     
     override func tearDown() {
@@ -37,26 +37,26 @@ final class ActivitiesViewControllerTests: XCTestCase {
     // MARK: Test Methods
     func test_startupConfiguration() {
         let viewControllers = landingViewController.children
-        XCTAssert(viewControllers.first as? ActivitiesViewController === activitiesViewController)
+        XCTAssert(viewControllers.first as? ActivitiesTableViewController === activitiesTableViewController)
         
-        let delegate = activitiesViewController.delegate as? MainViewController
+        let delegate = activitiesTableViewController.delegate as? MainViewController
         XCTAssert(delegate === mainViewController)
         
         // State Restoration
-        let restorationID = activitiesViewController.restorationIdentifier
-        XCTAssert(restorationID == "ActivitiesViewController")
+        let restorationID = activitiesTableViewController.restorationIdentifier
+        XCTAssert(restorationID == "ActivitiesTableViewController")
         
-        let tableViewRestorationID = activitiesViewController.tableView.restorationIdentifier
-        XCTAssert(tableViewRestorationID == "ActivitiesViewControllerTableView")
+        let tableViewRestorationID = activitiesTableViewController.tableView.restorationIdentifier
+        XCTAssert(tableViewRestorationID == "ActivitiesTableViewControllerTableView")
         
         // Table view delegates
         let tableViewDelegate =
-            activitiesViewController.tableView.delegate as? ActivitiesViewController
-        XCTAssert(tableViewDelegate === activitiesViewController)
+            activitiesTableViewController.tableView.delegate as? ActivitiesTableViewController
+        XCTAssert(tableViewDelegate === activitiesTableViewController)
         
         let tableViewDataSource =
-            activitiesViewController.tableView.dataSource as? ActivitiesViewController
-        XCTAssert(tableViewDataSource === activitiesViewController)
+            activitiesTableViewController.tableView.dataSource as? ActivitiesTableViewController
+        XCTAssert(tableViewDataSource === activitiesTableViewController)
     }
     
     func test_tableView_layout() throws {
@@ -64,45 +64,45 @@ final class ActivitiesViewControllerTests: XCTestCase {
         expectation = expectation(description: "Table view did perform initial layout")
         
         DispatchQueue.main.async {
-            self.activitiesViewController.tableView.layoutIfNeeded()
+            self.activitiesTableViewController.tableView.layoutIfNeeded()
             self.expectation?.fulfill()
         }
         
         waitForExpectations(timeout: timeout)
         
         // Test table view layout
-        let sectionsCount = activitiesViewController.tableView.numberOfSections
+        let sectionsCount = activitiesTableViewController.tableView.numberOfSections
         XCTAssert(sectionsCount == 1)
         
-        let sectionZeroRowCount = activitiesViewController.tableView.numberOfRows(inSection: 0)
+        let sectionZeroRowCount = activitiesTableViewController.tableView.numberOfRows(inSection: 0)
         XCTAssert(sectionZeroRowCount == activityRepository.activitiesCount)
         
         let firstCell = try XCTUnwrap(
-            activitiesViewController.tableView.cellForRow(at: IndexPath(row: 0, section: 0))
+            activitiesTableViewController.tableView.cellForRow(at: IndexPath(row: 0, section: 0))
         )
         XCTAssert(firstCell.textLabel?.text == "Play Forza Horizon 5")
         XCTAssert(firstCell.imageView?.image == UIImage(named: "Unchecked"))
         
         let secondCell = try XCTUnwrap(
-            activitiesViewController.tableView.cellForRow(at: IndexPath(row: 1, section: 0))
+            activitiesTableViewController.tableView.cellForRow(at: IndexPath(row: 1, section: 0))
         )
         XCTAssert(secondCell.textLabel?.text == "Play Super Mario Odyssey")
         XCTAssert(secondCell.imageView?.image == UIImage(named: "Unchecked"))
         
         let thirdCell = try XCTUnwrap(
-            activitiesViewController.tableView.cellForRow(at: IndexPath(row: 2, section: 0))
+            activitiesTableViewController.tableView.cellForRow(at: IndexPath(row: 2, section: 0))
         )
         XCTAssert(thirdCell.textLabel?.text == "Play The Last of Us Part I")
         XCTAssert(thirdCell.imageView?.image == UIImage(named: "Unchecked"))
         
         let fourthCell = try XCTUnwrap(
-            activitiesViewController.tableView.cellForRow(at: IndexPath(row: 3, section: 0))
+            activitiesTableViewController.tableView.cellForRow(at: IndexPath(row: 3, section: 0))
         )
         XCTAssert(fourthCell.textLabel?.text == "Play Grand Theft Auto V")
         XCTAssert(fourthCell.imageView?.image == UIImage(named: "Checked"))
         
         let fifthCell = try XCTUnwrap(
-            activitiesViewController.tableView.cellForRow(at: IndexPath(row: 4, section: 0))
+            activitiesTableViewController.tableView.cellForRow(at: IndexPath(row: 4, section: 0))
         )
         XCTAssert(fifthCell.textLabel?.text == "Play Metroid Dread")
         XCTAssert(fifthCell.imageView?.image == UIImage(named: "Checked"))
@@ -111,15 +111,15 @@ final class ActivitiesViewControllerTests: XCTestCase {
     func test_selectActivity_shouldPresentActivityUpdateScreen_withPrePopulatedFields() throws {
         let indexPath = IndexPath(row: 0, section: 0)
         // Simulate the user selecting a row...
-        activitiesViewController
+        activitiesTableViewController
             .tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
-        activitiesViewController
-            .tableView(activitiesViewController.tableView, didSelectRowAt: indexPath)
+        activitiesTableViewController
+            .tableView(activitiesTableViewController.tableView, didSelectRowAt: indexPath)
 
         // Verify presentation of "Activity Update" screen
-        XCTAssertNil(activitiesViewController.tableView.indexPathsForSelectedRows)
+        XCTAssertNil(activitiesTableViewController.tableView.indexPathsForSelectedRows)
         let navController = try XCTUnwrap(
-            activitiesViewController.presentedViewController as? UINavigationController
+            activitiesTableViewController.presentedViewController as? UINavigationController
         )
         let activityDetailVC = try XCTUnwrap(
             navController.topViewController as? ActivityDetailViewController
@@ -135,7 +135,7 @@ final class ActivitiesViewControllerTests: XCTestCase {
         // Dismiss presented screen
         expectation = expectation(description: "Activity Update screen dismissed")
         DispatchQueue.main.async {
-            self.activitiesViewController.dismiss(animated: false) { [unowned self] in
+            self.activitiesTableViewController.dismiss(animated: false) { [unowned self] in
                 expectation?.fulfill()
             }
         }
@@ -144,14 +144,14 @@ final class ActivitiesViewControllerTests: XCTestCase {
     
     func test_deleteRow_shouldDeleteActivity() {
         // Disable model observation
-        activitiesViewController.invalidateObservation()
+        activitiesTableViewController.invalidateObservation()
         
         // Confirm activity exists before
         XCTAssertNotNil(activityRepository.activity(fromIdentifier: uuid3))
         
         // Delete the row corresponding to the activity
-        activitiesViewController.tableView(
-            activitiesViewController.tableView,
+        activitiesTableViewController.tableView(
+            activitiesTableViewController.tableView,
             commit: .delete,
             forRowAt: IndexPath(row: 2, section: 0)
         )
@@ -167,11 +167,11 @@ final class ActivitiesViewControllerTests: XCTestCase {
         spyTableView.didReload = { self.expectation?.fulfill() }
         spyTableView.didDeleteRows = { self.expectation?.fulfill() }
 
-        activitiesViewController.tableView = spyTableView
-        activitiesViewController.loadViewIfNeeded()
+        activitiesTableViewController.tableView = spyTableView
+        activitiesTableViewController.loadViewIfNeeded()
         
         let tableView = try XCTUnwrap(
-            self.activitiesViewController.tableView, "Expected a table view, but found none"
+            self.activitiesTableViewController.tableView, "Expected a table view, but found none"
         )
         var newCell: UITableViewCell?
         
@@ -261,11 +261,13 @@ final class ActivitiesViewControllerTests: XCTestCase {
     }
     
     private func constructTestingViews(activityRepository: NSObject & ActivityRepository) ->
-       (AppDelegate, MainViewController, LandingViewController, ActivitiesViewController) {
+       (AppDelegate, MainViewController, LandingViewController, ActivitiesTableViewController) {
         
-        let activitiesVC = ActivitiesViewController(activityRepository: activityRepository)
+        let activitiesTableVC = ActivitiesTableViewController(
+            activityRepository: activityRepository
+        )
         let landingVC = LandingViewController(
-            activitiesViewController: activitiesVC,
+            activitiesTableViewController: activitiesTableVC,
             activityRepository: activityRepository
         )
         let mainVC = MainViewController(
@@ -274,7 +276,7 @@ final class ActivitiesViewControllerTests: XCTestCase {
         )
         
         landingVC.delegate = mainVC
-        activitiesVC.delegate = mainVC
+        activitiesTableVC.delegate = mainVC
         
         landingVC.loadViewIfNeeded()
 
@@ -285,7 +287,7 @@ final class ActivitiesViewControllerTests: XCTestCase {
         appDelegate.window = window
         
         window.makeKeyAndVisible()
-        return (appDelegate, mainVC, landingVC, activitiesVC)
+        return (appDelegate, mainVC, landingVC, activitiesTableVC)
     }
 }
 

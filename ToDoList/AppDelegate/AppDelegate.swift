@@ -18,11 +18,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
     ) -> Bool {
         
-        let activitiesVC = ActivitiesViewController(
+        let activitiesTableVC = ActivitiesTableViewController(
             activityRepository: GlobalToDoListActivityRepository
         )
         let landingVC = LandingViewController(
-            activitiesViewController: activitiesVC,
+            activitiesTableViewController: activitiesTableVC,
             activityRepository: GlobalToDoListActivityRepository
         )
         let mainVC = MainViewController(
@@ -31,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         )
         
         landingVC.delegate = mainVC
-        activitiesVC.delegate = mainVC
+        activitiesTableVC.delegate = mainVC
         
         window = UIWindow()
         window?.rootViewController = mainVC
@@ -77,7 +77,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let restorationIdentifier = identifierComponents.last
         
         switch restorationIdentifier {
-        case ActivitiesViewController.Restoration.viewControllerIdentifier:
+        case ActivitiesTableViewController.Restoration.viewControllerIdentifier:
             viewController = window?.rootViewController?.children[0].children[0]
         default:
             break

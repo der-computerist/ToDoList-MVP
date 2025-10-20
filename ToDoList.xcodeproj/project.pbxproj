@@ -27,11 +27,11 @@
 		CD68833E27A56E98007B3DC9 /* UIViewController+ErrorPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD68833D27A56E98007B3DC9 /* UIViewController+ErrorPresentation.swift */; };
 		CD758E8A2EA13C6F00430AD4 /* LandingViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD758E892EA13C6F00430AD4 /* LandingViewPresenter.swift */; };
 		CD758E8C2EA13ECC00430AD4 /* LandingViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD758E8B2EA13ECC00430AD4 /* LandingViewProtocol.swift */; };
-		CD7EE442280104FE00490DDD /* ActivitiesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD7EE440280104FE00490DDD /* ActivitiesViewController.swift */; };
+		CD7EE442280104FE00490DDD /* ActivitiesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD7EE440280104FE00490DDD /* ActivitiesTableViewController.swift */; };
 		CD9D759A27B0C0C900533BBE /* UIAlertController+BugFix.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD9D759927B0C0C900533BBE /* UIAlertController+BugFix.swift */; };
 		CDB7273F291D261A00B86A72 /* LandingViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB7272C291AF4F400B86A72 /* LandingViewControllerTests.swift */; };
 		CDB72740291D261A00B86A72 /* ActivityCreationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB72736291AF52000B86A72 /* ActivityCreationTests.swift */; };
-		CDB72741291D261A00B86A72 /* ActivitiesViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB72731291AF50E00B86A72 /* ActivitiesViewControllerTests.swift */; };
+		CDB72741291D261A00B86A72 /* ActivitiesTableViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB72731291AF50E00B86A72 /* ActivitiesTableViewControllerTests.swift */; };
 		CDB8ADE827888687006BEE17 /* ToDoListActivityRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB8ADE727888687006BEE17 /* ToDoListActivityRepository.swift */; };
 		CDC39F01287E3348004789B7 /* ActivityBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC39F00287E3348004789B7 /* ActivityBuilder.swift */; };
 		CDCB6F1F29359121000CDEBD /* FakeActivityDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDCB6F1E29359121000CDEBD /* FakeActivityDataStore.swift */; };
@@ -89,10 +89,10 @@
 		CD68833D27A56E98007B3DC9 /* UIViewController+ErrorPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+ErrorPresentation.swift"; sourceTree = "<group>"; };
 		CD758E892EA13C6F00430AD4 /* LandingViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingViewPresenter.swift; sourceTree = "<group>"; };
 		CD758E8B2EA13ECC00430AD4 /* LandingViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingViewProtocol.swift; sourceTree = "<group>"; };
-		CD7EE440280104FE00490DDD /* ActivitiesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivitiesViewController.swift; sourceTree = "<group>"; };
+		CD7EE440280104FE00490DDD /* ActivitiesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivitiesTableViewController.swift; sourceTree = "<group>"; };
 		CD9D759927B0C0C900533BBE /* UIAlertController+BugFix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+BugFix.swift"; sourceTree = "<group>"; };
 		CDB7272C291AF4F400B86A72 /* LandingViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingViewControllerTests.swift; sourceTree = "<group>"; };
-		CDB72731291AF50E00B86A72 /* ActivitiesViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesViewControllerTests.swift; sourceTree = "<group>"; };
+		CDB72731291AF50E00B86A72 /* ActivitiesTableViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesTableViewControllerTests.swift; sourceTree = "<group>"; };
 		CDB72736291AF52000B86A72 /* ActivityCreationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCreationTests.swift; sourceTree = "<group>"; };
 		CDB8ADE727888687006BEE17 /* ToDoListActivityRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListActivityRepository.swift; sourceTree = "<group>"; };
 		CDC39F00287E3348004789B7 /* ActivityBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityBuilder.swift; sourceTree = "<group>"; };
@@ -220,7 +220,7 @@
 			isa = PBXGroup;
 			children = (
 				CD2BEF1D2977826300F3232C /* Reusable */,
-				CDB72731291AF50E00B86A72 /* ActivitiesViewControllerTests.swift */,
+				CDB72731291AF50E00B86A72 /* ActivitiesTableViewControllerTests.swift */,
 				CDB72736291AF52000B86A72 /* ActivityCreationTests.swift */,
 				CD465F5D2970A8C7009FB98B /* ActivityUpdateTests.swift */,
 				CDB7272C291AF4F400B86A72 /* LandingViewControllerTests.swift */,
@@ -353,7 +353,7 @@
 			children = (
 				CD3A2FE129DE62F900F750A7 /* Strategies */,
 				CDDE238127E3F14B00CA383D /* MainViewController.swift */,
-				CD7EE440280104FE00490DDD /* ActivitiesViewController.swift */,
+				CD7EE440280104FE00490DDD /* ActivitiesTableViewController.swift */,
 				CD495A8E273581A90056FCB0 /* ActivityDetailViewController.swift */,
 			);
 			path = Controllers;
@@ -541,7 +541,7 @@
 				CDC39F01287E3348004789B7 /* ActivityBuilder.swift in Sources */,
 				CDB8ADE827888687006BEE17 /* ToDoListActivityRepository.swift in Sources */,
 				CDE16EE5279F540500F3DFAE /* ViewControllerContainment.swift in Sources */,
-				CD7EE442280104FE00490DDD /* ActivitiesViewController.swift in Sources */,
+				CD7EE442280104FE00490DDD /* ActivitiesTableViewController.swift in Sources */,
 				CD3A2FE329DE632000F750A7 /* ActivityDetailStrategy.swift in Sources */,
 				CDE16EE02797687000F3DFAE /* NiblessTableViewController.swift in Sources */,
 				CD495AA22735891A0056FCB0 /* ActivityRepository.swift in Sources */,
@@ -574,7 +574,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CDB7273F291D261A00B86A72 /* LandingViewControllerTests.swift in Sources */,
-				CDB72741291D261A00B86A72 /* ActivitiesViewControllerTests.swift in Sources */,
+				CDB72741291D261A00B86A72 /* ActivitiesTableViewControllerTests.swift in Sources */,
 				CD465F5E2970A8C7009FB98B /* ActivityUpdateTests.swift in Sources */,
 				CDB72740291D261A00B86A72 /* ActivityCreationTests.swift in Sources */,
 			);

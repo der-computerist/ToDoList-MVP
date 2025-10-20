@@ -1,5 +1,5 @@
 //
-//  ActivitiesViewController.swift
+//  ActivitiesTableViewController.swift
 //  ToDoList
 //
 //  Created by Enrique Aliaga on 11/5/21.
@@ -7,18 +7,18 @@
 
 import UIKit
 
-public protocol ActivitiesViewControllerDelegate: AnyObject {
+public protocol ActivitiesTableViewControllerDelegate: AnyObject {
     
-    func activitiesViewController(
-        _ viewController: ActivitiesViewController,
+    func activitiesTableViewController(
+        _ viewController: ActivitiesTableViewController,
         didSelectActivity activity: Activity
     )
 }
 
-public final class ActivitiesViewController: NiblessTableViewController {
+public final class ActivitiesTableViewController: NiblessTableViewController {
     
     // MARK: - Properties
-    public weak var delegate: ActivitiesViewControllerDelegate?
+    public weak var delegate: ActivitiesTableViewControllerDelegate?
     
     private let activityRepository: NSObject & ActivityRepository
     private var activities: [Activity] { activityRepository.activities }
@@ -66,7 +66,7 @@ public final class ActivitiesViewController: NiblessTableViewController {
 }
 
 // MARK: - UITableViewDataSource
-extension ActivitiesViewController {
+extension ActivitiesTableViewController {
     
     public override func tableView(_ _: UITableView, numberOfRowsInSection _: Int) -> Int {
         activities.count
@@ -104,18 +104,18 @@ extension ActivitiesViewController {
 }
 
 // MARK: - UITableViewDelegate
-extension ActivitiesViewController {
+extension ActivitiesTableViewController {
     
     public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
         let selectedActivity = activities[indexPath.row]
-        delegate?.activitiesViewController(self, didSelectActivity: selectedActivity)
+        delegate?.activitiesTableViewController(self, didSelectActivity: selectedActivity)
     }
 }
 
 // MARK: - State Restoration
-extension ActivitiesViewController: UIDataSourceModelAssociation {
+extension ActivitiesTableViewController: UIDataSourceModelAssociation {
     
     public func modelIdentifierForElement(at idx: IndexPath, in view: UIView) -> String? {
         guard !idx.isEmpty else { return nil }
@@ -136,7 +136,7 @@ extension ActivitiesViewController: UIDataSourceModelAssociation {
 }
 
 // MARK: - Constants
-extension ActivitiesViewController {
+extension ActivitiesTableViewController {
     
     enum Assets {
         static let doneActivityImage = UIImage(named: "Checked")
@@ -148,14 +148,14 @@ extension ActivitiesViewController {
     }
     
     enum Restoration {
-        static let viewControllerIdentifier = String(describing: ActivitiesViewController.self)
+        static let viewControllerIdentifier = String(describing: ActivitiesTableViewController.self)
         static let tableViewIdentifier = viewControllerIdentifier + "TableView"
     }
 }
 
 // MARK: - Testing
 #if TEST
-extension ActivitiesViewController {
+extension ActivitiesTableViewController {
     
     /// Test hook to stop model observation.
     ///

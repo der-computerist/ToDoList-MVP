@@ -355,9 +355,11 @@ final class ActivityCreationTests: XCTestCase {
        (AppDelegate, MainViewController, ActivityDetailViewController) {
         
         func constructInitialViews() -> (AppDelegate, MainViewController, LandingViewController) {
-            let activitiesVC = ActivitiesViewController(activityRepository: activityRepository)
+            let activitiesTableVC = ActivitiesTableViewController(
+                activityRepository: activityRepository
+            )
             let landingVC = LandingViewController(
-                activitiesViewController: activitiesVC,
+                activitiesTableViewController: activitiesTableVC,
                 activityRepository: activityRepository
             )
             let mainVC = MainViewController(
@@ -366,7 +368,7 @@ final class ActivityCreationTests: XCTestCase {
             )
             
             landingVC.delegate = mainVC
-            activitiesVC.delegate = mainVC
+            activitiesTableVC.delegate = mainVC
             
             landingVC.loadViewIfNeeded()
             

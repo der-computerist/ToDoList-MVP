@@ -281,11 +281,13 @@ final class ActivityUpdateTests: XCTestCase {
        (AppDelegate, MainViewController, ActivityDetailViewController) {
         
         func constructInitialViews() ->
-           (AppDelegate, MainViewController, ActivitiesViewController) {
+           (AppDelegate, MainViewController, ActivitiesTableViewController) {
             
-            let activitiesVC = ActivitiesViewController(activityRepository: activityRepository)
+            let activitiesTableVC = ActivitiesTableViewController(
+                activityRepository: activityRepository
+            )
             let landingVC = LandingViewController(
-                activitiesViewController: activitiesVC,
+                activitiesTableViewController: activitiesTableVC,
                 activityRepository: activityRepository
             )
             let mainVC = MainViewController(
@@ -294,7 +296,7 @@ final class ActivityUpdateTests: XCTestCase {
             )
             
             landingVC.delegate = mainVC
-            activitiesVC.delegate = mainVC
+            activitiesTableVC.delegate = mainVC
             
             landingVC.loadViewIfNeeded()
             
@@ -305,17 +307,21 @@ final class ActivityUpdateTests: XCTestCase {
             appDelegate.window = window
             
             window.makeKeyAndVisible()
-            return (appDelegate, mainVC, activitiesVC)
+            return (appDelegate, mainVC, activitiesTableVC)
         }
         
         func presentActivityUpdateScreen() throws -> ActivityDetailViewController {
             // Simulate the user tapping on the first activity from the table...
             let indexPath = IndexPath(row: 0, section: 0)
-            activitiesVC.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
-            activitiesVC.tableView(activitiesVC.tableView, didSelectRowAt: indexPath)
+            activitiesTableVC.tableView.selectRow(
+                at: indexPath,
+                animated: false,
+                scrollPosition: .none
+            )
+            activitiesTableVC.tableView(activitiesTableVC.tableView, didSelectRowAt: indexPath)
             
             let navController = try XCTUnwrap(
-                activitiesVC.presentedViewController as? UINavigationController
+                activitiesTableVC.presentedViewController as? UINavigationController
             )
             let activityDetailVC = try XCTUnwrap(
                 navController.topViewController as? ActivityDetailViewController
@@ -330,7 +336,7 @@ final class ActivityUpdateTests: XCTestCase {
         let initialViews = constructInitialViews()
         let appDelegate = initialViews.0
         let mainVC = initialViews.1
-        let activitiesVC = initialViews.2
+        let activitiesTableVC = initialViews.2
         
         let activityDetailVC = try presentActivityUpdateScreen()
         

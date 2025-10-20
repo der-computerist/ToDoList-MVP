@@ -77,25 +77,25 @@ final class LandingViewControllerTests: XCTestCase {
     }
     
     func test_enterEditingMode() throws {
-        let activitiesVC = try XCTUnwrap(
-            landingViewController.children[0] as? ActivitiesViewController
+        let activitiesTableVC = try XCTUnwrap(
+            landingViewController.children[0] as? ActivitiesTableViewController
         )
         landingViewController.setEditing(true, animated: false)
         
         XCTAssertTrue(landingViewController.isEditing)
-        XCTAssertTrue(activitiesVC.isEditing)
-        XCTAssertTrue(activitiesVC.tableView.isEditing)
+        XCTAssertTrue(activitiesTableVC.isEditing)
+        XCTAssertTrue(activitiesTableVC.tableView.isEditing)
     }
     
     func test_exitEditingMode() throws {
-        let activitiesVC = try XCTUnwrap(
-            landingViewController.children[0] as? ActivitiesViewController
+        let activitiesTableVC = try XCTUnwrap(
+            landingViewController.children[0] as? ActivitiesTableViewController
         )
         landingViewController.setEditing(false, animated: false)
         
         XCTAssertFalse(landingViewController.isEditing)
-        XCTAssertFalse(activitiesVC.isEditing)
-        XCTAssertFalse(activitiesVC.tableView.isEditing)
+        XCTAssertFalse(activitiesTableVC.isEditing)
+        XCTAssertFalse(activitiesTableVC.tableView.isEditing)
     }
     
     func test_tapAddButton_shouldPresentActivityCreationScreen_withEmptyFields_andStatusSectionHidden() throws {
@@ -205,9 +205,11 @@ final class LandingViewControllerTests: XCTestCase {
     private func constructTestingViews(activityRepository: NSObject & ActivityRepository) ->
        (AppDelegate, MainViewController, LandingViewController) {
         
-        let activitiesVC = ActivitiesViewController(activityRepository: activityRepository)
+        let activitiesTableVC = ActivitiesTableViewController(
+            activityRepository: activityRepository
+        )
         let landingVC = LandingViewController(
-            activitiesViewController: activitiesVC,
+            activitiesTableViewController: activitiesTableVC,
             activityRepository: activityRepository
         )
         let mainVC = MainViewController(
@@ -216,7 +218,7 @@ final class LandingViewControllerTests: XCTestCase {
         )
         
         landingVC.delegate = mainVC
-        activitiesVC.delegate = mainVC
+        activitiesTableVC.delegate = mainVC
         
         landingVC.loadViewIfNeeded()
         

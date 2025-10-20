@@ -18,7 +18,7 @@ public final class LandingViewController: NiblessViewController {
     private var presenter: LandingViewPresenter?
     public weak var delegate: LandingViewControllerDelegate?
     
-    private let activitiesViewController: ActivitiesViewController
+    private let activitiesTableViewController: ActivitiesTableViewController
     private let activityRepository: NSObject & ActivityRepository
     private var shouldAnimateEditingTransition = true
 
@@ -38,10 +38,10 @@ public final class LandingViewController: NiblessViewController {
     
     // MARK: - Methods
     public init(
-        activitiesViewController: ActivitiesViewController,
+        activitiesTableViewController: ActivitiesTableViewController,
         activityRepository: NSObject & ActivityRepository
     ) {
-        self.activitiesViewController = activitiesViewController
+        self.activitiesTableViewController = activitiesTableViewController
         self.activityRepository = activityRepository
         
         super.init()
@@ -60,7 +60,10 @@ public final class LandingViewController: NiblessViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        add(childViewController: activitiesViewController, over: rootView.activitiesContainerView)
+        add(
+            childViewController: activitiesTableViewController,
+            over: rootView.activitiesContainerView
+        )
         presenter = LandingViewPresenter(activityRepository: activityRepository, view: self)
     }
     
@@ -92,7 +95,7 @@ extension LandingViewController: LandingViewProtocol {
     }
     
     func setEditingMode(_ editing: Bool) {
-        activitiesViewController.setEditing(editing, animated: shouldAnimateEditingTransition)
+        activitiesTableViewController.setEditing(editing, animated: shouldAnimateEditingTransition)
     }
    
     func didTapAddButton() {
@@ -106,7 +109,10 @@ extension LandingViewController {
     public override func encodeRestorableState(with coder: NSCoder) {
         super.encodeRestorableState(with: coder)
         
-        coder.encode(activitiesViewController, forKey: Restoration.Key.activitiesViewController)
+        coder.encode(
+            activitiesTableViewController,
+            forKey: Restoration.Key.activitiesTableViewController
+        )
         coder.encode(isEditing, forKey: Restoration.Key.landingViewControllerIsEditing)
     }
     
@@ -127,7 +133,7 @@ extension LandingViewController {
         static let viewControllerIdentifier = String(describing: LandingViewController.self)
         
         enum Key {
-            static let activitiesViewController = "activitiesViewController"
+            static let activitiesTableViewController = "activitiesTableViewController"
             static let landingViewControllerIsEditing = "landingViewControllerIsEditing"
         }
     }
