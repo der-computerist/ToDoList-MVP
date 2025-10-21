@@ -91,9 +91,7 @@ extension ActivitiesTableViewController {
     
     public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
-        let selectedActivity = activities[indexPath.row]
-        delegate?.activitiesTableViewController(self, didSelectActivity: selectedActivity)
+        presenter?.didSelectRow(at: indexPath)
     }
 }
 
@@ -106,6 +104,10 @@ extension ActivitiesTableViewController: ActivitiesTableViewProtocol {
     
     func deleteRows(at indexPaths: [IndexPath]) {
         tableView.deleteRows(at: indexPaths, with: .automatic)
+    }
+    
+    func didSelectActivity(_ activity: Activity) {
+        delegate?.activitiesTableViewController(self, didSelectActivity: activity)
     }
 }
 

@@ -11,4 +11,5 @@ protocol ActivitiesTableViewProtocol: AnyObject {
     
     func reloadData()
     func deleteRows(at indexPaths: [IndexPath])
+    func didSelectActivity(_ activity: Activity)
 }

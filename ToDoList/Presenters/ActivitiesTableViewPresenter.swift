@@ -14,6 +14,8 @@ class ActivitiesTableViewPresenter {
     private let activityRepository: NSObject & ActivityRepository
     private var observation: NSKeyValueObservation!
     
+    private var activities: [Activity] { activityRepository.activities }
+    
     // MARK: - Initialization
     init(
         activityRepository: NSObject & ActivityRepository,
@@ -26,6 +28,11 @@ class ActivitiesTableViewPresenter {
     }
     
     // MARK: - Methods
+    func didSelectRow(at indexPath: IndexPath) {
+        let selectedActivity = activities[indexPath.row]
+        tableView?.didSelectActivity(selectedActivity)
+    }
+    
     private func observeActivities<T: NSObject & ActivityRepository>(
         on subject: T
     ) -> NSKeyValueObservation {
