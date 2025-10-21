@@ -22,7 +22,6 @@ public final class ActivitiesTableViewController: NiblessTableViewController {
     public weak var delegate: ActivitiesTableViewControllerDelegate?
     
     private let activityRepository: NSObject & ActivityRepository
-    private var activities: [Activity] { activityRepository.activities }
     private let cellIdentifier = Constants.cellReuseIdentifier
     
     // MARK: - Methods
@@ -52,7 +51,7 @@ public final class ActivitiesTableViewController: NiblessTableViewController {
 extension ActivitiesTableViewController {
     
     public override func tableView(_ _: UITableView, numberOfRowsInSection _: Int) -> Int {
-        activities.count
+        presenter?.numberOfRows() ?? 0
     }
 
     public override func tableView(
@@ -61,15 +60,10 @@ extension ActivitiesTableViewController {
     ) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
-        let activity = activities[indexPath.row]
-        cell.textLabel?.text = activity.name
-
-        switch activity.status {
-        case .pending:
-            cell.imageView?.image = Assets.pendingActivityImage
-        case .done:
-            cell.imageView?.image = Assets.doneActivityImage
-        }
+        
+        let cellData = presenter?.cellData(for: indexPath)
+        cell.textLabel?.text = cellData?.name
+        cell.imageView?.image = cellData.flatMap { UIImage.icon(for: $0.status) }
         
         return cell
     }
@@ -80,8 +74,7 @@ extension ActivitiesTableViewController {
         forRowAt indexPath: IndexPath
     ) {
         if editingStyle == .delete {
-            let activity = activities[indexPath.row]
-            activityRepository.delete(activity: activity)
+            presenter?.deleteRow(at: indexPath)
         }
     }
 }
@@ -114,9 +107,9 @@ extension ActivitiesTableViewController: ActivitiesTableViewProtocol {
 // MARK: - State Restoration
 extension ActivitiesTableViewController: UIDataSourceModelAssociation {
     
-    public func modelIdentifierForElement(at idx: IndexPath, in view: UIView) -> String? {
-        guard !idx.isEmpty else { return nil }
-        return activities[idx.row].id
+    public func modelIdentifierForElement(at indexPath: IndexPath, in view: UIView) -> String? {
+        guard !indexPath.isEmpty else { return nil }
+        return presenter?.activityIdentifier(at: indexPath)
     }
     
     public func indexPathForElement(
@@ -124,21 +117,25 @@ extension ActivitiesTableViewController: UIDataSourceModelAssociation {
         in view: UIView
     ) -> IndexPath? {
         
-        guard let activity = activityRepository.activity(fromIdentifier: identifier),
-              let index = activities.firstIndex(of: activity) else {
-            return nil
+        presenter?.indexPathForActivity(withIdentifier: identifier)
+    }
+}
+
+// MARK: UIImage extension
+private extension UIImage {
+    
+    static func icon(for activityStatus: ActivityStatusIcon) -> UIImage? {
+        switch activityStatus {
+        case .checked:
+            UIImage(named: Assets.checkedActivityImageName)
+        case .unchecked:
+            UIImage(named: Assets.uncheckedActivityImageName)
         }
-        return IndexPath(row: index, section: 0)
     }
 }
 
 // MARK: - Constants
 extension ActivitiesTableViewController {
-    
-    enum Assets {
-        static let doneActivityImage = UIImage(named: "Checked")
-        static let pendingActivityImage = UIImage(named: "Unchecked")
-    }
     
     enum Constants {
         static let cellReuseIdentifier = "UITableViewCell"
@@ -148,4 +145,9 @@ extension ActivitiesTableViewController {
         static let viewControllerIdentifier = String(describing: ActivitiesTableViewController.self)
         static let tableViewIdentifier = viewControllerIdentifier + "TableView"
     }
+}
+
+private enum Assets {
+    static let checkedActivityImageName = "Checked"
+    static let uncheckedActivityImageName = "Unchecked"
 }
