@@ -61,9 +61,12 @@ extension ActivitiesTableViewController {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
         
-        let cellData = presenter?.cellData(for: indexPath)
-        cell.textLabel?.text = cellData?.name
-        cell.imageView?.image = cellData.flatMap { UIImage.icon(for: $0.status) }
+        guard let cellData = presenter?.cellData(for: indexPath) else {
+            return cell
+        }
+        
+        cell.textLabel?.text = cellData.name
+        cell.imageView?.image = UIImage.icon(for: cellData.status)
         
         return cell
     }
@@ -127,10 +130,15 @@ private extension UIImage {
     static func icon(for activityStatus: ActivityStatusIcon) -> UIImage? {
         switch activityStatus {
         case .checked:
-            UIImage(named: Assets.checkedActivityImageName)
+            UIImage(named: ImageName.checkedActivityImageName)
         case .unchecked:
-            UIImage(named: Assets.uncheckedActivityImageName)
+            UIImage(named: ImageName.uncheckedActivityImageName)
         }
+    }
+    
+    private enum ImageName {
+        static let checkedActivityImageName = "Checked"
+        static let uncheckedActivityImageName = "Unchecked"
     }
 }
 
@@ -145,9 +153,4 @@ extension ActivitiesTableViewController {
         static let viewControllerIdentifier = String(describing: ActivitiesTableViewController.self)
         static let tableViewIdentifier = viewControllerIdentifier + "TableView"
     }
-}
-
-private enum Assets {
-    static let checkedActivityImageName = "Checked"
-    static let uncheckedActivityImageName = "Unchecked"
 }
