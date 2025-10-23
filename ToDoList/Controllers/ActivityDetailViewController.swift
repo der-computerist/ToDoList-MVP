@@ -16,6 +16,7 @@ public protocol ActivityDetailViewControllerDelegate: AnyObject {
 public final class ActivityDetailViewController: NiblessViewController {
     
     // MARK: - Properties
+    private var presenter: ActivityDetailViewPresenter?
     public weak var delegate: ActivityDetailViewControllerDelegate?
 
     lazy var activityBuilder = ActivityBuilder(activity: activity) {
@@ -93,6 +94,8 @@ public final class ActivityDetailViewController: NiblessViewController {
         setUpController()
         wireController()
         updateViewFromActivity()
+        
+        presenter = ActivityDetailViewPresenter(activityRepository: activityRepository, view: self)
     }
     
     public override func viewWillLayoutSubviews() {
@@ -281,6 +284,11 @@ extension ActivityDetailViewController: UIAdaptivePresentationControllerDelegate
     public func presentationControllerDidDismiss(_ _: UIPresentationController) {
         delegate?.activityDetailViewControllerDidCancel(self)
     }
+}
+
+// MARK: - ActivityDetailViewProtocol
+extension ActivityDetailViewController: ActivityDetailViewProtocol {
+    
 }
 
 // MARK: - State Restoration
