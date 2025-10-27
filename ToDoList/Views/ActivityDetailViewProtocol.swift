@@ -9,5 +9,6 @@ import Foundation
 
 protocol ActivityDetailViewProtocol: AnyObject {
     
+    func refresh()
     func dismiss()
 }

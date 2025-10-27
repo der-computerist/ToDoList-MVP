@@ -94,16 +94,19 @@ public final class ActivityDetailViewController: NiblessViewController {
         wireController()
         updateViewFromActivity()
         
-        presenter = ActivityDetailViewPresenter(activityRepository: activityRepository, view: self)
+        presenter = ActivityDetailViewPresenter(
+            activity: activity,
+            activityRepository: activityRepository,
+            view: self
+        )
     }
     
     public override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         
         activityDetailStrategy.enableOrDisableRightBarButtonItem()
-        // If there are unsaved changes overall, disable the ability to dismiss
-        // using the pull-down gesture.
-        isModalInPresentation = activityBuilder.hasChanges()
+        // Should we disable the ability to dismiss using the pull-down gesture?
+        isModalInPresentation = presenter?.shouldPreventDismissal() == true
     }
     
     public override func viewDidLayoutSubviews() {
@@ -145,7 +148,7 @@ public final class ActivityDetailViewController: NiblessViewController {
     
     @objc
     func toggleStatus(_ sender: UISwitch) {
-        activityBuilder.status = sender.isOn ? .done : .pending
+        presenter?.didUpdateStatus(enabled: sender.isOn)
     }
     
     // MARK: Editing Mode
@@ -253,7 +256,7 @@ extension ActivityDetailViewController: UITextFieldDelegate {
         }
         
         let newText = oldText.replacingCharacters(in: Range(range, in: oldText)!, with: string)
-        activityBuilder.name = newText
+        presenter?.didUpdateName(newText)
         return true
     }
     
@@ -267,7 +270,7 @@ extension ActivityDetailViewController: UITextFieldDelegate {
 extension ActivityDetailViewController: UITextViewDelegate {
     
     public func textViewDidChange(_ textView: UITextView) {
-        activityBuilder.description = textView.text
+        presenter?.didUpdateDescription(textView.text)
     }
 }
 
@@ -287,6 +290,10 @@ extension ActivityDetailViewController: UIAdaptivePresentationControllerDelegate
 
 // MARK: - ActivityDetailViewProtocol
 extension ActivityDetailViewController: ActivityDetailViewProtocol {
+    
+    func refresh() {
+        viewIfLoaded?.setNeedsLayout()
+    }
     
     func dismiss() {
         delegate?.activityDetailViewControllerDidFinish(self)
