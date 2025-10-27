@@ -20,4 +20,8 @@ class ActivityDetailViewPresenter {
     }
     
     // MARK: - Methods
+    
+    func dismiss() {
+        view?.dismiss()
+    }
 }

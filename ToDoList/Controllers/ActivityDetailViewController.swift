@@ -9,7 +9,6 @@ import UIKit
 
 public protocol ActivityDetailViewControllerDelegate: AnyObject {
     
-    func activityDetailViewControllerDidCancel(_ viewController: ActivityDetailViewController)
     func activityDetailViewControllerDidFinish(_ viewController: ActivityDetailViewController)
 }
 
@@ -139,8 +138,8 @@ public final class ActivityDetailViewController: NiblessViewController {
             // Confirm that it's OK to lose the changes.
             confirmCancel()
         } else {
-            // There are no unsaved changes; ask the delegate to dismiss immediately.
-            delegate?.activityDetailViewControllerDidCancel(self)
+            // There are no unsaved changes; ask the presenter to dismiss immediately.
+            presenter?.dismiss()
         }
     }
     
@@ -215,7 +214,7 @@ public final class ActivityDetailViewController: NiblessViewController {
             title: CancelConfirmationAlert.yesActionTitle,
             style: .destructive
         ) { _ in
-            self.delegate?.activityDetailViewControllerDidCancel(self)
+            self.presenter?.dismiss()
         }
         let noAction = UIAlertAction(
             title: CancelConfirmationAlert.noActionTitle,
@@ -282,13 +281,16 @@ extension ActivityDetailViewController: UIAdaptivePresentationControllerDelegate
     }
     
     public func presentationControllerDidDismiss(_ _: UIPresentationController) {
-        delegate?.activityDetailViewControllerDidCancel(self)
+        presenter?.dismiss()
     }
 }
 
 // MARK: - ActivityDetailViewProtocol
 extension ActivityDetailViewController: ActivityDetailViewProtocol {
     
+    func dismiss() {
+        delegate?.activityDetailViewControllerDidFinish(self)
+    }
 }
 
 // MARK: - State Restoration

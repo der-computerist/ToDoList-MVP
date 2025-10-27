@@ -372,12 +372,12 @@
 		CDDD37732819F2D000DE3303 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				CD1077AD2EA6615B00FAE09A /* ActivitiesTableViewProtocol.swift */,
 				CDDD3785281B00DF00DE3303 /* ActivityDetailRootView.swift */,
+				CDA7AD672EAA4DCC0095C776 /* ActivityDetailViewProtocol.swift */,
 				CDDD377C2819F4D300DE3303 /* LandingRootView.swift */,
 				CDE16EEA279F56F700F3DFAE /* LandingViewController.swift */,
 				CD758E8B2EA13ECC00430AD4 /* LandingViewProtocol.swift */,
-				CD1077AD2EA6615B00FAE09A /* ActivitiesTableViewProtocol.swift */,
-				CDA7AD672EAA4DCC0095C776 /* ActivityDetailViewProtocol.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
