@@ -123,15 +123,7 @@ public final class ActivityDetailViewController: NiblessViewController {
     // MARK: Actions
     @objc
     func handleSavePressed(sender: UIBarButtonItem) {
-        do {
-            activity = try activityBuilder.build()
-            confirmSave()
-        } catch {
-            presentErrorAlert(
-                title: ActivityBuilder.Error.title,
-                message: error.localizedDescription
-            )
-        }
+        presenter?.didTapSaveButton()
     }
     
     @objc
@@ -184,32 +176,6 @@ public final class ActivityDetailViewController: NiblessViewController {
         rootView.doneSwitch.isOn = activityBuilder.status == .done
     }
     
-    private func confirmSave() {
-        let alert = UIAlertController(
-            title: SaveConfirmationAlert.title,
-            message: SaveConfirmationAlert.message,
-            preferredStyle: .alert
-        )
-        
-        let yesAction = UIAlertAction(
-            title: SaveConfirmationAlert.yesActionTitle,
-            style: .default
-        ) { _ in
-            alert.dismiss(animated: true) {
-                self.saveAndDismiss()
-            }
-        }
-        let noAction = UIAlertAction(
-            title: SaveConfirmationAlert.noActionTitle,
-            style: .cancel
-        )
-        
-        alert.addAction(yesAction)
-        alert.addAction(noAction)
-        
-        present(alert, animated: true, completion: nil)
-    }
-    
     private func confirmCancel() {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
@@ -229,11 +195,6 @@ public final class ActivityDetailViewController: NiblessViewController {
         
         alert.pruneNegativeWidthConstraints()  // workaround to circumvent a UIKit bug
         present(alert, animated: true, completion: nil)
-    }
-    
-    private func saveAndDismiss() {
-        activityRepository.updateOrAdd(activity: activity)
-        delegate?.activityDetailViewControllerDidFinish(self)
     }
     
     private func updateViewForEditing(_ editing: Bool) {
@@ -290,6 +251,36 @@ extension ActivityDetailViewController: UIAdaptivePresentationControllerDelegate
 
 // MARK: - ActivityDetailViewProtocol
 extension ActivityDetailViewController: ActivityDetailViewProtocol {
+    
+    func presentSaveConfirmation() {
+        let alert = UIAlertController(
+            title: SaveConfirmationAlert.title,
+            message: SaveConfirmationAlert.message,
+            preferredStyle: .alert
+        )
+        
+        let yesAction = UIAlertAction(
+            title: SaveConfirmationAlert.yesActionTitle,
+            style: .default
+        ) { _ in
+            alert.dismiss(animated: true) {
+                self.presenter?.saveAndDismiss()
+            }
+        }
+        let noAction = UIAlertAction(
+            title: SaveConfirmationAlert.noActionTitle,
+            style: .cancel
+        )
+        
+        alert.addAction(yesAction)
+        alert.addAction(noAction)
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
+    func presentErrorAlert(error: Error) {
+        presentErrorAlert(title: ActivityBuilder.Error.title, message: error.localizedDescription)
+    }
     
     func refresh() {
         viewIfLoaded?.setNeedsLayout()

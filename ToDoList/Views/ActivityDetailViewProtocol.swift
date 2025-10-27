@@ -9,6 +9,8 @@ import Foundation
 
 protocol ActivityDetailViewProtocol: AnyObject {
     
+    func presentSaveConfirmation()
+    func presentErrorAlert(error: Error)
     func refresh()
     func dismiss()
 }

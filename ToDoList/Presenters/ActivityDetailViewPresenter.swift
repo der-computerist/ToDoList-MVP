@@ -38,7 +38,15 @@ class ActivityDetailViewPresenter {
     }
     
     // MARK: - Methods
-    
+    func didTapSaveButton() {
+        do {
+            activity = try activityBuilder.build()
+            view?.presentSaveConfirmation()
+        } catch {
+            view?.presentErrorAlert(error: error)
+        }
+    }
+
     func didUpdateName(_ name: String) {
         activityBuilder.name = name
     }
@@ -49,6 +57,11 @@ class ActivityDetailViewPresenter {
     
     func didUpdateStatus(enabled: Bool) {
         activityBuilder.status = enabled ? .done : .pending
+    }
+    
+    func saveAndDismiss() {
+        activityRepository.updateOrAdd(activity: activity)
+        dismiss()
     }
     
     func shouldPreventDismissal() -> Bool {
